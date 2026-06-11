@@ -135,6 +135,8 @@ h1,h2,h3,h4{font-family:var(--font-h);color:var(--ink)}
 .badge-pqs1{background:#DDD5FA;color:#3F1B82}
 .badge-pqs2{background:#FEE4D6;color:#9A2A12}
 .badge-pqs3{background:#FBE0E0;color:#7E1E1E}
+.badge-origem-ic{background:var(--blue-soft);color:#075985}
+.badge-origem-vc{background:var(--ok-soft);color:#065F46}
 
 .chips-row{display:flex;flex-wrap:wrap;gap:8px;padding:12px 28px 0}
 .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius-pill);font-size:.78rem;font-weight:500;background:var(--line-soft);color:var(--ink-2);text-decoration:none;transition:var(--transition);border:none;cursor:default;font-family:inherit}
@@ -525,11 +527,11 @@ function render(){
           <div class="card-subtitle">${esc(L.setor||'')} · CNPJ ${esc(L.cnpj||'')}</div>
         </div>
         <span class="badge ${meta.badge}">${meta.label}</span>
+        <span class="badge ${(s.aricia_stage||'').startsWith('Valida')?'badge-origem-vc':'badge-origem-ic'}" title="Etapa do funil de inteligência comercial de onde o lead veio">📍 ${esc(s.aricia_stage||'origem —')}</span>
         <span class="badge ${stBadge}">${stTxt}</span>
       </div>
     </div>
     <div class="chips-row">
-      <span class="chip">Etapa Aricia: ${esc(s.aricia_stage||'—')}</span>
       ${L.website?`<a class="chip" href="https://${esc(L.website)}" target="_blank" rel="noopener">🌐 ${esc(L.website)}</a>`:''}
       <span class="chip">Persona: Fiscal / Tributário / Controladoria</span>
     </div>
