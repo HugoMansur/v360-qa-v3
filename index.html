@@ -551,7 +551,7 @@ function render(){
     <div class="pvps-section">
       <h3>Mensagem — ancorada no dado</h3>
       <div class="pvp-content">
-        <div class="pvp-subject-row"><span class="lbl">Esqueleto</span><span class="subject">${esc(L.razao_social)} · ${meta.label.split('·')[1]||''}</span></div>
+        <div class="pvp-subject-row"><span class="lbl">Assunto</span><span class="subject">${esc(((L.pvps||{}).persona_1||{}).assunto||L.razao_social)}</span></div>
         <div class="pvp-body">${md(esc(msg))}</div>
       </div>
     </div>
