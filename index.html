@@ -324,7 +324,7 @@ a.chip:hover{background:var(--accent-soft);color:var(--accent-dark)}
     <h3>Atalhos</h3>
     <div class="shortcut-row"><kbd class="kbd">&uarr;</kbd> Aprovar</div>
     <div class="shortcut-row"><kbd class="kbd">&darr;</kbd> Rejeitar</div>
-    <div class="shortcut-row"><kbd class="kbd">Shift</kbd> Talvez</div>
+    <div class="shortcut-row"><kbd class="kbd">T</kbd> Talvez</div>
     <div class="shortcut-row"><kbd class="kbd">&larr;</kbd> / <kbd class="kbd">&rarr;</kbd> Navegar</div>
     <div class="shortcut-row"><kbd class="kbd">Ctrl+Z</kbd> Desfazer</div>
   </div>
@@ -634,16 +634,16 @@ function exportCSV(){
     const r=mr[L.lead_id];
     return [L.lead_id,'"'+(L.razao_social||'').replace(/"/g,"'")+'"',L.pqs,r.status,'"'+(r.notes||'').replace(/"/g,"'")+'"',reviewer].join(',');
   });
-  const blob=new Blob([head+lines.join('\n')],{type:'text/csv'});
+  const blob=new Blob(['﻿'+head+lines.join('\n')],{type:'text/csv;charset=utf-8'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`v3_decisoes_${reviewer.toLowerCase()}.csv`;a.click();
 }
 document.addEventListener('keydown',e=>{
-  if(e.target.tagName==='TEXTAREA') return;
+  if(['TEXTAREA','INPUT','SELECT'].includes(e.target.tagName)||e.isComposing) return;
   if(e.key==='ArrowRight') navigate(1);
   else if(e.key==='ArrowLeft') navigate(-1);
   else if(e.key==='ArrowUp'){e.preventDefault();act('approved');}
   else if(e.key==='ArrowDown'){e.preventDefault();act('rejected');}
-  else if(e.key==='Shift') act('maybe');
+  else if(e.key==='t'||e.key==='T') act('maybe');
   else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();undo();}
 });
 load();
