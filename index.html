@@ -469,7 +469,7 @@ function statsCards(L){
     return [['Municípios',s.n_municipios||'—'],['Aberturas 12m',s.aberturas_12m||'0'],['Serviço',s.pqs_tier?('Tier '+s.pqs_tier):'—'],['Score',s.score?Number(s.score).toFixed(0):'—']];
   }
   if(L.pqs==='pqs2'){
-    return [['Vagas fiscais',s.vagas_fiscais||'—'],['Headcount','Clay →'],['Etapa',(s.aricia_stage||'').replace('IC - ','')||'—'],['Score',s.score?Number(s.score).toFixed(0):'—']];
+    return [['Headcount fiscal',s.headcount_fiscal||'—'],['Vagas abertas',s.vagas_fiscais||'—'],['Etapa',(s.aricia_stage||'').replace('IC - ','')||'—'],['Score',s.score?Number(s.score).toFixed(0):'—']];
   }
   return [['Tributo',s.carf_tributo||'federais'],['Ano',s.carf_ano||'—'],['PGFN',s.pgfn_valor_fmt||'—'],['Score',s.score?Number(s.score).toFixed(0):'—']];
 }
@@ -485,9 +485,11 @@ function signalRows(L){
   }
   if(L.pqs==='pqs2'){
     const v=(s.vagas_titulos||'').split(';').map(x=>x.replace(/\[.*?\]/g,'').trim()).filter(Boolean).slice(0,4);
-    let h=`<div class="signal-row"><span class="signal-row-label">Vagas abertas</span>${s.vagas_fiscais} na área fiscal</div>`;
+    let h='';
+    if(s.headcount_fiscal) h+=`<div class="signal-row"><span class="signal-row-label">Headcount fiscal</span><b>${s.headcount_fiscal} pessoas</b> em cargos de fiscal/tributos/controladoria (LinkedIn ativo, keywords validadas)</div>`;
+    h+=`<div class="signal-row"><span class="signal-row-label">Vagas abertas</span>${s.vagas_fiscais} na área fiscal</div>`;
     if(v.length) h+=`<div class="signal-row">${v.map(x=>'• '+esc(x)).join('<br>')}</div>`;
-    h+=`<div class="signal-meta">Fonte: Gupy (vagas públicas) · headcount fiscal completa no Clay</div>`;
+    h+=`<div class="signal-meta">Fontes: LinkedIn via Clay (headcount, keywords validadas por inversão) · Gupy (vagas públicas)</div>`;
     return h;
   }
   let h=`<div class="signal-row"><span class="signal-row-label">Acórdão CARF</span>${esc(s.carf_acordao||'')} — ${esc(s.carf_tributo||'tributos federais')} ${esc(String(s.carf_ano||''))}</div>`;
