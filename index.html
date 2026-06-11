@@ -1,0 +1,145 @@
+<!doctype html><html lang="pt-br"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>V360 · QA V3 — Segmentos de dor</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1d2330;--mut:#6b7280;--line:#e6e8ec;
+--p1:#2563eb;--p2:#d97706;--p3:#dc2626;--ok:#16a34a;--no:#dc2626;--rv:#6b7280}
+*{box-sizing:border-box}body{margin:0;font:15px/1.5 -apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:760px;margin:0 auto;padding:16px}
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.top h1{font-size:16px;margin:0}.top .prog{color:var(--mut);font-size:13px}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.fbtn{border:1px solid var(--line);background:#fff;border-radius:18px;padding:4px 12px;font-size:13px;cursor:pointer;color:var(--mut)}
+.fbtn.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.badge{display:inline-block;color:#fff;font-weight:600;font-size:12px;padding:3px 10px;border-radius:20px}
+.b-pqs1{background:var(--p1)}.b-pqs2{background:var(--p2)}.b-pqs3{background:var(--p3)}
+.co{font-size:22px;font-weight:700;margin:10px 0 2px}
+.chips{margin:6px 0 14px}.chip{display:inline-block;background:#eef1f5;color:var(--mut);font-size:12px;padding:2px 9px;border-radius:6px;margin:0 6px 4px 0}
+.sec{margin:14px 0}.sec h3{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);margin:0 0 5px}
+.dor{font-size:14px;color:#374151}
+.ev{background:#f0f4ff;border:1px solid #dbe4ff;border-radius:10px;padding:12px 14px;font-size:14px}
+.ev.p2{background:#fff7ed;border-color:#fed7aa}.ev.p3{background:#fef2f2;border-color:#fecaca}
+.ev .li{margin-top:4px}.src{color:#6b7280;font-size:12px;margin-top:6px}
+.msg{background:#fafbfc;border-left:3px solid var(--line);padding:12px 14px;border-radius:0 8px 8px 0;font-size:14px;white-space:pre-line}
+.dec{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding:8px 0}
+.dec:last-child{border:0}.dec a{color:var(--p1);text-decoration:none;font-weight:600}
+.dec .role{color:var(--mut);font-size:13px}.area{font-size:11px;padding:1px 7px;border-radius:5px;background:#eef1f5;color:#475569;margin-left:6px}
+.note{font-size:12px;color:var(--mut);margin-top:6px}
+textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px;font:inherit;margin-top:12px;resize:vertical;min-height:46px}
+.acts{display:flex;gap:8px;margin-top:12px}
+.acts button{flex:1;border:0;border-radius:9px;padding:11px;font-weight:600;font-size:14px;cursor:pointer;color:#fff}
+.bok{background:var(--ok)}.bno{background:var(--no)}.brv{background:var(--rv)}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:14px}
+.nav button{border:0;border-radius:8px;padding:8px 16px;background:#e6e8ec;color:var(--ink);cursor:pointer;font-weight:600}
+.done{color:var(--mut);font-size:13px;text-align:center;margin-top:10px}
+.loading{text-align:center;color:var(--mut);padding:60px 0}
+.statusline{font-size:12px;color:var(--mut);margin-top:8px;text-align:right}
+</style></head><body><div class="wrap">
+<div class="top"><h1>V360 · QA V3 <span style="color:#9aa1ad;font-weight:400">— segmentos de dor (wave3)</span></h1>
+<div class="prog" id="prog"></div></div>
+<div class="filters" id="filters"></div>
+<div id="app"><div class="loading">Carregando leads…</div></div>
+<div class="nav"><button onclick="go(-1)">‹ Anterior</button>
+<button onclick="exportCSV()">Exportar decisões (CSV)</button>
+<button onclick="go(1)">Próximo ›</button></div>
+<div class="done" id="done"></div>
+</div>
+<script>
+const SUPABASE_URL='https://dzsvbklojjvmjwcizkxi.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6c3Zia2xvamp2bWp3Y2l6a3hpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4MzY2OTMsImV4cCI6MjA5MDQxMjY5M30.jzE0RhN4UWEH13dUNqFY2XtPbnyXwuE_d_FvDVFjg88';
+const BATCH='wave3-v3-2026-06-09';
+const HKEY={apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY};
+const PQS={pqs1:{n:"Tomador de serviço (NFS-e)",cls:"b-pqs1",
+ dor:"Opera em muitos municípios e toma muito serviço — recebe NFS-e de dezenas de prefeituras, cada uma com layout próprio. É o moat da V360 (1.500 prefeituras conectadas)."},
+ pqs2:{n:"Escala manual fiscal",cls:"b-pqs2",
+ dor:"Está contratando pra área fiscal — jogando gente no problema em vez de automatizar. Volume de nota cresceu mais rápido que o processo."},
+ pqs3:{n:"Risco fiscal / MAED",cls:"b-pqs3",
+ dor:"Tem acórdão público no CARF com tese de escrituração intempestiva — apanhou por nota fora da janela. A V360 previne exatamente isso."}};
+const AREA={fiscal:"Fiscal",tributario:"Tributário",controladoria:"Controladoria"};
+let ALL=[],VIEW=[],i=0,fPqs='todos';
+let REV=JSON.parse(localStorage.getItem('v3_wave3_reviews')||'{}');
+let reviewer=localStorage.getItem('v3_reviewer')||'';
+function md(s){return (s||'').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')}
+async function load(){
+ if(!reviewer){reviewer=(prompt('Seu nome (pra registrar as avaliações):')||'anon').trim();localStorage.setItem('v3_reviewer',reviewer);}
+ const r=await fetch(`${SUPABASE_URL}/rest/v1/v360_leads?select=*&batch_id=eq.${BATCH}&order=pqs.asc,lead_id.asc`,{headers:HKEY});
+ ALL=await r.json();
+ buildFilters();applyFilter('todos');
+}
+function buildFilters(){
+ const counts={todos:ALL.length};
+ for(const L of ALL)counts[L.pqs]=(counts[L.pqs]||0)+1;
+ document.getElementById('filters').innerHTML=['todos','pqs1','pqs2','pqs3'].map(p=>
+  `<button class="fbtn${p===fPqs?' on':''}" onclick="applyFilter('${p}')">${p==='todos'?'Todos':PQS[p].n} (${counts[p]||0})</button>`).join('');
+}
+function applyFilter(p){fPqs=p;VIEW=p==='todos'?ALL:ALL.filter(L=>L.pqs===p);i=0;buildFilters();render();}
+function evHtml(L){
+ const s=L.signal_data||{},t=L.pqs;
+ if(t==='pqs1'){let m=(s.municipios_recentes||[]).map(x=>x.municipio+(x.uf?'/'+x.uf:'')).slice(0,3).join(', ');
+  return `<div class="ev"><b>${s.n_municipios} municípios</b> de operação · <b>${s.aberturas_12m||0} aberturas</b> em 12m${s.pqs_tier?` · serviço <b>Tier ${s.pqs_tier}</b>`:''}
+  ${m?`<div class="li">Aberturas recentes: ${m}</div>`:''}
+  ${s.reverse_path_vendors?`<div class="li">Citada como cliente por: ${s.reverse_path_vendors}</div>`:''}
+  <div class="src">Fonte: Receita Federal (estabelecimentos por município)</div></div>`;}
+ if(t==='pqs2'){let v=(s.vagas_titulos||'').split(';').map(x=>x.replace(/\[.*?\]/g,'').trim()).filter(Boolean).slice(0,4).map(x=>'• '+x).join('<br>');
+  return `<div class="ev p2"><b>${s.vagas_fiscais} vagas fiscais abertas</b><div class="li">${v}</div>
+  <div class="src">Fonte: Gupy (vagas públicas) · headcount fiscal: completa no Clay</div></div>`;}
+ return `<div class="ev p3"><b>Acórdão CARF ${s.carf_acordao||''}</b> — ${s.carf_tributo||'tributos federais'} ${s.carf_ano||''}
+  <div class="li">Tese: ${s.carf_tese||''}</div>
+  ${s.pgfn_valor_fmt?`<div class="li">Dívida ativa tributária (PGFN): <b>${s.pgfn_valor_fmt}</b></div>`:''}
+  <div class="src">Fonte: CARF (acórdão público) + PGFN</div></div>`;}
+function decHtml(L){const ds=L.decisores||[];
+ if(!ds.length)return '<div class="note">Decisores pendentes (complementar no Clay).</div>';
+ return ds.map(d=>`<div class="dec"><div><a href="${d.linkedin_url}" target="_blank" rel="noopener">${d.nome}</a><span class="area">${AREA[d.area]||d.area||''}</span><div class="role">${d.cargo||''}</div></div><div class="role">${d.confidence||''}</div></div>`).join('')
+ +'<div class="note">Email + telefone: enriquecidos no Clay (próximo passo).</div>';}
+function render(){
+ if(!VIEW.length){document.getElementById('app').innerHTML='<div class="loading">Nenhum lead nesse filtro.</div>';document.getElementById('prog').textContent='';return;}
+ const L=VIEW[i],p=PQS[L.pqs],s=L.signal_data||{},r=REV[L.lead_id]||{};
+ document.getElementById('prog').textContent=`${i+1} / ${VIEW.length} · ${reviewer}`;
+ const msg=((L.pvps||{}).persona_1||{}).corpo||'';
+ document.getElementById('app').innerHTML=`<div class="card">
+ <span class="badge ${p.cls}">${p.n}</span>
+ <div class="co">${L.razao_social}</div>
+ <div class="chips"><span class="chip">Etapa: ${s.aricia_stage||'-'}</span><span class="chip">${L.setor||''}</span><span class="chip">CNPJ ${L.cnpj||''}</span><span class="chip">persona: Fiscal/Trib/Controladoria</span></div>
+ <div class="sec"><h3>Por que essa conta</h3><div class="dor">${p.dor}</div></div>
+ <div class="sec"><h3>O dado específico (raspado)</h3>${evHtml(L)}</div>
+ <div class="sec"><h3>Mensagem — ancorada no dado</h3><div class="msg">${md(msg)}</div></div>
+ <div class="sec"><h3>Decisores</h3>${decHtml(L)}</div>
+ <textarea id="nt" placeholder="Observação (persona certa? empresa certa? mensagem certa?)">${r.notes||''}</textarea>
+ <div class="acts"><button class="bok" onclick="act('approved')">✓ Aprovar</button>
+ <button class="brv" onclick="act('maybe')">✎ Revisar</button>
+ <button class="bno" onclick="act('rejected')">✕ Recusar</button></div>
+ ${r.status?`<div class="done">Marcado: <b>${r.status}</b>${r.synced?' · salvo':''}</div>`:''}
+ <div class="statusline">${L.lead_id}</div></div>`;}
+async function saveReview(leadId,review){
+ const row={lead_id:leadId,reviewer_name:reviewer,status:review.status,notes:review.notes||'',rating:0,
+  reviewed_at:new Date().toISOString(),updated_at:new Date().toISOString()};
+ try{
+  let resp=await fetch(`${SUPABASE_URL}/rest/v1/v360_leads_reviews?on_conflict=lead_id,reviewer_name`,
+   {method:'POST',headers:{...HKEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},body:JSON.stringify(row)});
+  if(!resp.ok){await fetch(`${SUPABASE_URL}/rest/v1/v360_leads_reviews`,
+   {method:'POST',headers:{...HKEY,'Content-Type':'application/json'},body:JSON.stringify(row)});}
+  review.synced=true;
+ }catch(e){review.synced=false;}
+ localStorage.setItem('v3_wave3_reviews',JSON.stringify(REV));
+}
+async function act(status){const L=VIEW[i];
+ REV[L.lead_id]={status,notes:document.getElementById('nt').value};
+ localStorage.setItem('v3_wave3_reviews',JSON.stringify(REV));
+ saveReview(L.lead_id,REV[L.lead_id]);
+ if(i<VIEW.length-1){i++;render();}else{summary();render();}}
+function go(d){if(!VIEW.length)return;const L=VIEW[i],n=document.getElementById('nt');
+ if(n){REV[L.lead_id]={...(REV[L.lead_id]||{}),notes:n.value};localStorage.setItem('v3_wave3_reviews',JSON.stringify(REV));}
+ i=Math.max(0,Math.min(VIEW.length-1,i+d));render();}
+function summary(){const tot=Object.values(REV).filter(r=>r.status).length;
+ document.getElementById('done').textContent=`Avaliados: ${tot} / ${ALL.length}`;}
+function exportCSV(){
+ const head='lead_id,razao_social,pqs,status,notes,reviewer\n';
+ const lines=ALL.filter(L=>REV[L.lead_id]&&REV[L.lead_id].status).map(L=>{
+  const r=REV[L.lead_id];
+  return [L.lead_id,'"'+(L.razao_social||'').replace(/"/g,"'")+'"',L.pqs,r.status,'"'+(r.notes||'').replace(/"/g,"'")+'"',reviewer].join(',');});
+ const blob=new Blob([head+lines.join('\n')],{type:'text/csv'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='v3_wave3_decisoes.csv';a.click();}
+document.onkeydown=e=>{if(e.key==='ArrowRight')go(1);if(e.key==='ArrowLeft')go(-1);};
+load();
+</script></body></html>
