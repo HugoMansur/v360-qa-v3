@@ -137,6 +137,7 @@ h1,h2,h3,h4{font-family:var(--font-h);color:var(--ink)}
 .badge-pqs3{background:#FBE0E0;color:#7E1E1E}
 .badge-origem-ic{background:var(--blue-soft);color:#075985}
 .badge-origem-vc{background:var(--ok-soft);color:#065F46}
+.badge-sla{background:#DCFCE7;color:#065F46;border:1px solid #34D399}
 
 .chips-row{display:flex;flex-wrap:wrap;gap:8px;padding:12px 28px 0}
 .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius-pill);font-size:.78rem;font-weight:500;background:var(--line-soft);color:var(--ink-2);text-decoration:none;transition:var(--transition);border:none;cursor:default;font-family:inherit}
@@ -367,7 +368,7 @@ a.chip:hover{background:var(--accent-soft);color:var(--accent-dark)}
 <script>
 const SUPABASE_URL = 'https://dzsvbklojjvmjwcizkxi.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6c3Zia2xvamp2bWp3Y2l6a3hpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4MzY2OTMsImV4cCI6MjA5MDQxMjY5M30.jzE0RhN4UWEH13dUNqFY2XtPbnyXwuE_d_FvDVFjg88';
-const BATCH = 'wave3-v3-2026-06-09';
+const BATCH = 'wave3-v3-final-2026-06-16';
 const HKEY = {apikey:SUPABASE_KEY, Authorization:'Bearer '+SUPABASE_KEY};
 
 const PQS_META = {
@@ -541,6 +542,7 @@ function render(){
         </div>
         <span class="badge ${meta.badge}">${meta.label}</span>
         <span class="badge ${(s.aricia_stage||'').startsWith('Valida')?'badge-origem-vc':'badge-origem-ic'}" title="Etapa do funil de inteligência comercial de onde o lead veio">📍 ${esc(s.aricia_stage||'origem —')}</span>
+        ${s.sla_apto?`<span class="badge badge-sla" title="Apta na regra de reengajamento da inteligência comercial: perdida por '${esc(s.sla_motivo||'')}', quarentena de ${s.sla_dias} dias já cumprida — ${s.sla_idade} dias desde a última perda.">✅ SLA OK · ${esc(s.sla_motivo||'')}${s.sla_idade!=null&&s.sla_dias!=null?` (${s.sla_idade}/${s.sla_dias}d)`:''}</span>`:''}
         <span class="badge ${stBadge}">${stTxt}</span>
       </div>
     </div>
