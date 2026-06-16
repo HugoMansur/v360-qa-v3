@@ -176,6 +176,13 @@ a.chip:hover{background:var(--accent-soft);color:var(--accent-dark)}
 .decisor-link.linkedin:hover{background:#084B94}
 .decisor-conf{font-size:.65rem;color:var(--ink-3);margin-left:auto;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
 .decisor-note{font-size:.72rem;color:var(--ink-3);margin-top:8px}
+.decisor-contato{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line-soft)}
+.contato-chip{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:700;text-decoration:none;padding:5px 10px;border-radius:var(--radius-pill);white-space:nowrap;letter-spacing:.01em;transition:all .12s}
+.contato-chip.tel{background:var(--accent-soft);color:var(--accent-dark);border:1px solid var(--accent)}
+.contato-chip.tel:hover{background:var(--accent);color:#fff}
+.contato-chip.mail{background:#fff;color:var(--ink-2);border:1px solid var(--line)}
+.contato-chip.mail:hover{border-color:var(--ink-3);color:var(--ink)}
+.contato-chip.pend{background:var(--line-soft);color:var(--ink-3);border:1px dashed var(--line);font-weight:600;cursor:default}
 
 .pvps-section{padding:16px 28px 0}
 .pvps-section h3{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);margin-bottom:10px;font-weight:700;font-family:var(--font-h)}
@@ -519,6 +526,10 @@ function render(){
         ${d.linkedin_url?`<a class="decisor-link linkedin" href="${d.linkedin_url}" target="_blank" rel="noopener">in LinkedIn</a>`:''}
         <span class="decisor-conf">${esc(d.confidence||'')}</span>
       </div>
+      ${(d.telefone||d.email)?`<div class="decisor-contato">
+        ${d.telefone?`<a class="contato-chip tel" href="tel:${String(d.telefone).replace(/[^+\d]/g,'')}" title="Ligar">📱 ${esc(d.telefone)}</a>`:''}
+        ${d.email?`<a class="contato-chip mail" href="mailto:${esc(d.email)}" title="E-mail">✉️ ${esc(d.email)}</a>`:''}
+      </div>`:(j===0?`<div class="decisor-contato"><span class="contato-chip pend">📱 telefone em enriquecimento</span></div>`:'')}
     </div>`).join('');
   area.innerHTML=`<div class="card-wrapper"><div class="card${navDir<0?' reverse':''}">
     <div class="card-header">
@@ -546,7 +557,7 @@ function render(){
     <div class="decisores-section">
       <h3>Decisores (${(L.decisores||[]).length})</h3>
       <div class="decisores-grid">${decs||'<div class="decisor-note">Pendentes — complementa no Clay.</div>'}</div>
-      <div class="decisor-note">Email + telefone: enriquecidos no Clay (próxima etapa).</div>
+      <div class="decisor-note">📱 telefone do decisor principal via FullEnrich · ✉️ email em enriquecimento.</div>
     </div>
     <div class="pvps-section">
       <h3>Mensagem — ancorada no dado</h3>
