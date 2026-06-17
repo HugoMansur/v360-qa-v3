@@ -253,17 +253,9 @@ a.chip:hover{background:var(--accent-soft);color:var(--accent-dark)}
     </div>
     <p>V3 · 60 leads · 3 segmentos de dor</p>
     <div class="reviewer-tabs" role="tablist" aria-label="Revisor">
-      <button class="reviewer-tab" id="tabTalita" onclick="setReviewer('Talita')">
-        <span>Talita</span>
-        <span class="tab-count" id="countTalita">0</span>
-      </button>
-      <button class="reviewer-tab" id="tabAna" onclick="setReviewer('Ana')">
-        <span>Ana</span>
+      <button class="reviewer-tab active" id="tabAna" onclick="setReviewer('Ana')">
+        <span>Ana Lu</span>
         <span class="tab-count" id="countAna">0</span>
-      </button>
-      <button class="reviewer-tab" id="tabHugo" onclick="setReviewer('Hugo')">
-        <span>Hugo</span>
-        <span class="tab-count" id="countHugo">0</span>
       </button>
     </div>
   </div>
@@ -384,7 +376,7 @@ const AREA = {fiscal:'Fiscal', tributario:'Tributário', controladoria:'Controla
 
 let LEADS=[], VIEW=[], idx=0;
 let pqsFilter='all', statusFilter='all';
-let reviewer = localStorage.getItem('v3_reviewer_tab') || 'Talita';
+let reviewer = 'Ana';
 let REV = {};           // {reviewer: {lead_id: {status,notes}}}
 let undoStack=[];
 let navDir=1;
@@ -429,7 +421,7 @@ function setReviewer(name, skipSave){
   reviewer = name;
   localStorage.setItem('v3_reviewer_tab', name);
   loadLocal();
-  for(const t of ['Talita','Ana','Hugo']){
+  for(const t of ['Ana']){
     const el=document.getElementById('tab'+t);
     if(el) el.classList.toggle('active', t===name);
   }
@@ -460,7 +452,7 @@ function refreshSidebar(){
   document.getElementById('statApproved').textContent=counts.approved||0;
   document.getElementById('statRejected').textContent=counts.rejected||0;
   document.getElementById('statMaybe').textContent=counts.maybe||0;
-  for(const t of ['Talita','Ana','Hugo']){
+  for(const t of ['Ana']){
     const r=REV[t]||JSON.parse(localStorage.getItem('v3w3_rev_'+t)||'{}');
     const el=document.getElementById('count'+t);
     if(el) el.textContent=Object.values(r).filter(x=>x.status).length;
