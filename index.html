@@ -366,10 +366,11 @@ a.chip:hover{background:var(--accent-soft);color:var(--accent-dark)}
 const SUPABASE_URL = 'https://dzsvbklojjvmjwcizkxi.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6c3Zia2xvamp2bWp3Y2l6a3hpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4MzY2OTMsImV4cCI6MjA5MDQxMjY5M30.jzE0RhN4UWEH13dUNqFY2XtPbnyXwuE_d_FvDVFjg88';
 const BATCHES = [
-  {id:'wave3-v3-apto10-2026-06-17', label:'Apto 10'},
+  {id:'leva-17-2026-06-30', label:'Leva 17 · V3 (apuração)'},
   {id:'leva-18-2026-06-23', label:'Leva 18 · nova'},
+  {id:'wave3-v3-apto10-2026-06-17', label:'Apto 10'},
 ];
-let BATCH = localStorage.getItem('v3_batch') || 'wave3-v3-apto10-2026-06-17';
+let BATCH = localStorage.getItem('v3_batch') || 'leva-17-2026-06-30';
 const HKEY = {apikey:SUPABASE_KEY, Authorization:'Bearer '+SUPABASE_KEY};
 
 const PQS_META = {
@@ -380,7 +381,7 @@ const PQS_META = {
   pqs3:{label:'PQS-3 · Risco Fiscal · MAED', badge:'badge-pqs3', sig:'signal-pqs3',
     dor:'Tem acórdão público no CARF com tese de escrituração intempestiva — apanhou por nota fora da janela. A V360 previne exatamente isso.'}
 };
-const AREA = {fiscal:'Fiscal', tributario:'Tributário', controladoria:'Controladoria'};
+const AREA = {fiscal:'Fiscal', tributario:'Tributário', controladoria:'Controladoria', contas_a_pagar:'Contas a Pagar', contabil:'Contábil'};
 
 let LEADS=[], VIEW=[], idx=0;
 let pqsFilter='all', statusFilter='all';
