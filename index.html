@@ -253,8 +253,9 @@ a.chip:hover{background:var(--accent-soft);color:var(--accent-dark)}
     </div>
     <p>V3 · 3 segmentos de dor</p>
     <div class="reviewer-tabs batch-tabs" role="tablist" aria-label="Lista">
-      <button class="reviewer-tab batch-tab active" data-batch="wave3-v3-apto10-2026-06-17" onclick="setBatch('wave3-v3-apto10-2026-06-17')"><span>Apto 10</span></button>
-      <button class="reviewer-tab batch-tab" data-batch="leva-18-2026-06-23" onclick="setBatch('leva-18-2026-06-23')"><span>Leva 18 · nova</span></button>
+      <button class="reviewer-tab batch-tab active" data-batch="leva-17-2026-06-30" onclick="setBatch('leva-17-2026-06-30')"><span>Leva 17 · nova</span></button>
+      <button class="reviewer-tab batch-tab" data-batch="leva-18-2026-06-23" onclick="setBatch('leva-18-2026-06-23')"><span>Leva 18 · estoque</span></button>
+      <button class="reviewer-tab batch-tab" data-batch="wave3-v3-apto10-2026-06-17" onclick="setBatch('wave3-v3-apto10-2026-06-17')"><span>Apto 10 · 1ª</span></button>
     </div>
     <div class="reviewer-tabs" role="tablist" aria-label="Revisor">
       <button class="reviewer-tab active" id="tabAna" onclick="setReviewer('Ana')">
@@ -370,7 +371,7 @@ const BATCHES = [
   {id:'leva-18-2026-06-23', label:'Leva 18 · nova'},
   {id:'wave3-v3-apto10-2026-06-17', label:'Apto 10'},
 ];
-let BATCH = localStorage.getItem('v3_batch') || 'leva-17-2026-06-30';
+let BATCH = localStorage.getItem('v3_batch2') || 'leva-17-2026-06-30';
 const HKEY = {apikey:SUPABASE_KEY, Authorization:'Bearer '+SUPABASE_KEY};
 
 const PQS_META = {
@@ -394,7 +395,7 @@ function lsKey(){return 'v3w3_rev_'+reviewer;}
 function loadLocal(){REV[reviewer]=JSON.parse(localStorage.getItem(lsKey())||'{}');}
 function saveLocal(){localStorage.setItem(lsKey(), JSON.stringify(REV[reviewer]||{}));}
 function myRev(){return REV[reviewer]=REV[reviewer]||{};}
-function setBatch(id){ if(id===BATCH) return; BATCH=id; localStorage.setItem('v3_batch',id);
+function setBatch(id){ if(id===BATCH) return; BATCH=id; localStorage.setItem('v3_batch2',id);
   document.querySelectorAll('.batch-tab').forEach(b=>b.classList.toggle('active', b.dataset.batch===id));
   idx=0; pqsFilter='all'; statusFilter='all'; load(); }
 
