@@ -253,9 +253,8 @@ a.chip:hover{background:var(--accent-soft);color:var(--accent-dark)}
     </div>
     <p>V3 · 3 segmentos de dor</p>
     <div class="reviewer-tabs batch-tabs" role="tablist" aria-label="Lista">
-      <button class="reviewer-tab batch-tab active" data-batch="leva-17-2026-06-30" onclick="setBatch('leva-17-2026-06-30')"><span>Leva 17 · nova</span></button>
-      <button class="reviewer-tab batch-tab" data-batch="leva-18-2026-06-23" onclick="setBatch('leva-18-2026-06-23')"><span>Leva 18 · estoque</span></button>
-      <button class="reviewer-tab batch-tab" data-batch="wave3-v3-apto10-2026-06-17" onclick="setBatch('wave3-v3-apto10-2026-06-17')"><span>Apto 10 · 1ª</span></button>
+      <button class="reviewer-tab batch-tab" data-batch="wave3-v3-apto10-2026-06-17" onclick="setBatch('wave3-v3-apto10-2026-06-17')"><span>Leva 1</span></button>
+      <button class="reviewer-tab batch-tab active" data-batch="leva-17-2026-06-30" onclick="setBatch('leva-17-2026-06-30')"><span>Leva 2</span></button>
     </div>
     <div class="reviewer-tabs" role="tablist" aria-label="Revisor">
       <button class="reviewer-tab active" id="tabAna" onclick="setReviewer('Ana')">
@@ -367,9 +366,8 @@ a.chip:hover{background:var(--accent-soft);color:var(--accent-dark)}
 const SUPABASE_URL = 'https://dzsvbklojjvmjwcizkxi.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6c3Zia2xvamp2bWp3Y2l6a3hpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4MzY2OTMsImV4cCI6MjA5MDQxMjY5M30.jzE0RhN4UWEH13dUNqFY2XtPbnyXwuE_d_FvDVFjg88';
 const BATCHES = [
-  {id:'leva-17-2026-06-30', label:'Leva 17 · V3 (apuração)'},
-  {id:'leva-18-2026-06-23', label:'Leva 18 · nova'},
-  {id:'wave3-v3-apto10-2026-06-17', label:'Apto 10'},
+  {id:'wave3-v3-apto10-2026-06-17', label:'Leva 1'},
+  {id:'leva-17-2026-06-30', label:'Leva 2'},
 ];
 let BATCH = localStorage.getItem('v3_batch2') || 'leva-17-2026-06-30';
 const HKEY = {apikey:SUPABASE_KEY, Authorization:'Bearer '+SUPABASE_KEY};
