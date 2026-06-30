@@ -136,6 +136,7 @@ h1,h2,h3,h4{font-family:var(--font-h);color:var(--ink)}
 .badge-pqs1{background:#DDD5FA;color:#3F1B82}
 .badge-pqs2{background:#FEE4D6;color:#9A2A12}
 .badge-pqs3{background:#FBE0E0;color:#7E1E1E}
+.badge-pqs4{background:#D2EFE4;color:#0F5C43}
 .badge-origem-ic{background:var(--blue-soft);color:#075985}
 .badge-origem-vc{background:var(--ok-soft);color:#065F46}
 .badge-sla{background:#DCFCE7;color:#065F46;border:1px solid #34D399}
@@ -157,6 +158,7 @@ a.chip:hover{background:var(--accent-soft);color:var(--accent-dark)}
 .signal-pqs1{background:var(--blue-soft);border-color:#BDE0F8}
 .signal-pqs2{background:var(--accent-soft);border-color:#FBD0B5}
 .signal-pqs3{background:var(--danger-soft);border-color:#F5C0C0}
+.signal-pqs4{background:#E3F4EC;border-color:#BCE3D2}
 .signal-box .signal-title{font-size:.82rem;font-weight:700;color:var(--ink);margin-bottom:6px;font-family:var(--font-h)}
 .signal-box .signal-row{font-size:.84rem;color:var(--ink-2);line-height:1.55;padding:6px 0;border-bottom:1px dashed rgba(42,21,64,.08)}
 .signal-box .signal-row:last-child{border-bottom:none}
@@ -282,6 +284,10 @@ a.chip:hover{background:var(--accent-soft);color:var(--accent-dark)}
       <span class="pqs-tag">PQS-3</span> Risco Fiscal · MAED
       <span class="filter-count" id="pqsCountP3">0</span>
     </button>
+    <button class="pqs-btn" data-pqs="pqs4" onclick="setPqsFilter('pqs4')">
+      <span class="pqs-tag">PQS-4</span> Apuração · Reforma
+      <span class="filter-count" id="pqsCountP4">0</span>
+    </button>
   </div>
 
   <div class="section">
@@ -378,7 +384,9 @@ const PQS_META = {
   pqs2:{label:'PQS-2 · Escala Manual Fiscal', badge:'badge-pqs2', sig:'signal-pqs2',
     dor:'Está contratando pra área fiscal — jogando gente no problema em vez de automatizar. Volume de nota cresceu mais rápido que o processo.'},
   pqs3:{label:'PQS-3 · Risco Fiscal · MAED', badge:'badge-pqs3', sig:'signal-pqs3',
-    dor:'Tem acórdão público no CARF com tese de escrituração intempestiva — apanhou por nota fora da janela. A V360 previne exatamente isso.'}
+    dor:'Tem acórdão público no CARF com tese de escrituração intempestiva — apanhou por nota fora da janela. A V360 previne exatamente isso.'},
+  pqs4:{label:'PQS-4 · Apuração / Reforma', badge:'badge-pqs4', sig:'signal-pqs4',
+    dor:'Base grande de crédito (serviços/insumos de terceiros no DFP). Com a reforma o crédito de IBS/CBS só vale depois que o fornecedor paga, e o fisco manda a apuração pré-pronta pra validar em ~15 dias. Sinal só rastreável em companhia aberta (DFP/CVM).'}
 };
 const AREA = {fiscal:'Fiscal', tributario:'Tributário', controladoria:'Controladoria', contas_a_pagar:'Contas a Pagar', contabil:'Contábil'};
 
@@ -455,6 +463,7 @@ function refreshSidebar(){
   document.getElementById('pqsCountP1').textContent=LEADS.filter(l=>l.pqs==='pqs1').length;
   document.getElementById('pqsCountP2').textContent=LEADS.filter(l=>l.pqs==='pqs2').length;
   document.getElementById('pqsCountP3').textContent=LEADS.filter(l=>l.pqs==='pqs3').length;
+  document.getElementById('pqsCountP4').textContent=LEADS.filter(l=>l.pqs==='pqs4').length;
   document.getElementById('filterCountAll').textContent=tot;
   document.getElementById('filterCountNew').textContent=counts.new||0;
   document.getElementById('filterCountApproved').textContent=counts.approved||0;
@@ -483,6 +492,10 @@ function statsCards(L){
   if(L.pqs==='pqs2'){
     return [['Headcount fiscal',s.headcount_fiscal||'—'],['Vagas abertas',s.vagas_fiscais||'—'],['Etapa',(s.aricia_stage||'').replace('IC - ','')||'—'],['Score',s.score?Number(s.score).toFixed(0):'—']];
   }
+  if(L.pqs==='pqs4'){
+    const fm=v=>v>=1000?('R$'+(v/1000).toFixed(1).replace('.',',')+'bi'):('R$'+v+'M');
+    return [['DFP serv. terceiros',s.dfp_M?fm(s.dfp_M):'—'],['Crédito em risco/ano',s.credito_risco_M?fm(s.credito_risco_M):'—'],['Gatilho','Reforma/apuração'],['Score',s.score?Number(s.score).toFixed(0):'—']];
+  }
   return [['Tributo',s.carf_tributo||'federais'],['Ano',s.carf_ano||'—'],['PGFN',s.pgfn_valor_fmt||'—'],['Score',s.score?Number(s.score).toFixed(0):'—']];
 }
 function signalRows(L){
@@ -502,6 +515,13 @@ function signalRows(L){
     h+=`<div class="signal-row"><span class="signal-row-label">Vagas abertas</span>${s.vagas_fiscais} na área fiscal</div>`;
     if(v.length) h+=`<div class="signal-row">${v.map(x=>'• '+esc(x)).join('<br>')}</div>`;
     h+=`<div class="signal-meta">Fontes: LinkedIn (cargos fiscais) · vagas públicas das empresas</div>`;
+    return h;
+  }
+  if(L.pqs==='pqs4'){
+    const fm=v=>v>=1000?('R$'+(v/1000).toFixed(1).replace('.',',')+'bi'):('R$'+v+'M');
+    let h=`<div class="signal-row"><span class="signal-row-label">Crédito em risco</span>${s.dfp_M?fm(s.dfp_M)+' em serviços/insumos de terceiros (DFP) · ~'+fm(s.credito_risco_M||Math.round(s.dfp_M*0.28))+'/ano de crédito que passa a depender da apuração':'base de crédito material'}</div>`;
+    h+=`<div class="signal-row"><span class="signal-row-label">Mecânica (reforma)</span>crédito condicionado ao pagamento do fornecedor + apuração pré-pronta do fisco pra validar nota a nota em ~15 dias/mês</div>`;
+    h+=`<div class="signal-meta">Fonte: DFP/CVM (serviços de terceiros, companhia aberta) · trigger reforma 2026-27</div>`;
     return h;
   }
   let h=`<div class="signal-row"><span class="signal-row-label">Acórdão CARF</span>${esc(s.carf_acordao||'')} — ${esc(s.carf_tributo||'tributos federais')} ${esc(String(s.carf_ano||''))}</div>`;
