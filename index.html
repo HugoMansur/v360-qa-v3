@@ -548,7 +548,7 @@ function render(){
       <div class="decisor-nome">${esc(d.nome)}</div>
       <div class="decisor-cargo">${esc(d.cargo||'')}</div>
       <div class="decisor-actions">
-        ${d.linkedin_url?`<a class="decisor-link linkedin" href="${d.linkedin_url}" target="_blank" rel="noopener">in LinkedIn</a>`:''}
+        ${(d.linkedin||d.linkedin_url)?`<a class="decisor-link linkedin" href="${esc(d.linkedin||d.linkedin_url)}" target="_blank" rel="noopener">in LinkedIn</a>`:''}
         <span class="decisor-conf">${esc(d.confidence||'')}</span>
       </div>
       ${(d.telefone||d.email)?`<div class="decisor-contato">
